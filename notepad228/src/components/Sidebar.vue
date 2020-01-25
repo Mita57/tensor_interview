@@ -1,6 +1,6 @@
 <template>
-    <div class="sidebar">
-        <button id="addNote"> + Заметка</button>
+    <div id="sidebar">
+        <button id="addNote" @click="showOverlay"> + Заметка</button>
         <input type="text" id="search" placeholder="Поиск">
         <div id="sort">
             Сортировать по:
@@ -11,7 +11,7 @@
             <ul id="notes">
                 <li v-for="note in notes">
                     <h3>{{note.header}}</h3>
-                  <p>{{note.text}}</p>
+                    <p>{{note.text}}</p>
                 </li>
             </ul>
         </div>
@@ -25,70 +25,29 @@
         name: 'Sidebar' as string,
         data() {
             return {
-                notes: [
-                    {
-                        id: 1,
-                        header: 'Enter sandman',
-                        text: 'Prodalis',
-                        dateAdded: '23.01.2020',
-                    },
-                    {
-                        id: 2,
-                        header: 'Sad but true',
-                        text: 'Heeey Im ur life sasok',
-                        dateAdded: '21.01.2020',
-                    },
-                    {
-                        id: 3,
-                        header: 'Holier than thou',
-                        text: 'You are',
-                        dateAdded: '22.01.2020',
-                    },
-                    {
-                        id: 4,
-                        header: 'The unforgiven',
-                        text: 'So I dub thee unforgiven',
-                        dateAdded: '20.01.2020',
-                    },
-                    {
-                        id: 5,
-                        header: 'Anywhere I may roam',
-                        text: 'Nowhere else to fucking roam, nothing else to fucking sing',
-                        dateAdded: '23.01.2020',
-                    }
-                    ,
-                    {
-                        id: 2,
-                        header: 'Sad but true',
-                        text: 'Heeey Im ur life sasok',
-                        dateAdded: '21.01.2020',
-                    },
-                    {
-                        id: 3,
-                        header: 'Holier than thou',
-                        text: 'You are',
-                        dateAdded: '22.01.2020',
-                    },
-                    {
-                        id: 4,
-                        header: 'The unforgiven',
-                        text: 'So I dub thee unforgiven',
-                        dateAdded: '20.01.2020',
-                    },
-                    {
-                        id: 5,
-                        header: 'Anywhere I may roam',
-                        text: 'Nowhere else to fucking roam, nothing else to fucking sing',
-                        dateAdded: '23.01.2020',
-                    }
 
-                ],
             }
         },
+        props: {
+            notes: Array
+        }
+        ,
+        methods: {
+            showOverlay() {
+                document.getElementById('addNoteDim').style.display = 'block';
+            }
+        }
     })
 </script>
 
 <style scoped>
+
+    #sidebar {
+        height: 100%;
+        width: 100%;
+        font-family: 'Roboto' ,'Avenir', Helvetica, Arial, sans-serif;
+    }
+
     #addNote {
         width: 90%;
         margin: 10px;
@@ -98,13 +57,22 @@
         color: white;
         border: 0;
         box-shadow: 0px 0px 6px 2px grey;
+        transition: 0.3s;
+        font-family: 'Roboto' ,'Avenir', Helvetica, Arial, sans-serif;
     }
 
     #search {
-        width: 89%;
-        height: 30px;
+        width: 87%;
+        height: 25px;
         border: dodgerblue 2px solid;
         padding: 4px;
+        box-shadow: 0px 0px 6px 2px grey;
+        font-family: 'Roboto' ,'Avenir', Helvetica, Arial, sans-serif;
+    }
+
+    #addNote:hover {
+        background-color: #3da4ff;
+        cursor: pointer;
     }
 
     #sort {
@@ -123,9 +91,14 @@
         margin: 0px;
         border: 1px grey solid;
     }
-    #notes li h3,p{
-      padding: 0px;
-      margin: 7px;
+
+    #notes li h3, p {
+        padding: 0px;
+        margin: 7px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
+
 
 </style>
