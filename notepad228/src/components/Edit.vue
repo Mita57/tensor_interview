@@ -1,12 +1,14 @@
 <template>
     <div id="edit">
         <div id="buttons">
-            <button id="editBtn">Редактировать</button>
+            <button id="saveBtn" v-if="editMode" @click="saveChanges()">Сохранить</button>
+            <button id="editBtn" v-else @click="enableChagnes()">Редактировать</button>
             <button id="deleteBtn">Удалить</button>
+            <button id="cancelBtn" v-if="editMode" @click="cancelChanges()">Отмена</button>
         </div>
         <div id="content">
-            <input id="headerInput" type="text">
-            <textarea id="textArea"> </textarea>
+            <input id="headerInput" type="text" readonly :value=header>
+            <textarea id="textArea" readonly> {{text}} </textarea>
         </div>
     </div>
 </template>
@@ -17,13 +19,42 @@
     export default Vue.extend({
         name: 'Edit' as string,
         data() {
-            return {}
+            return {
+                editMode: false,
+                initHeader:'',
+                initText:'',
+            }
         },
         props: {
-            noteId: Number
+            noteId: Number,
+            header: String,
+            text: String,
+            id: Number
         },
         methods: {
+            enableChagnes() {
+                (document.getElementById('headerInput') as HTMLInputElement).readOnly = false;
+                (document.getElementById('textArea') as HTMLInputElement).readOnly = false;
+                this.editMode = true;
+                this.initHeader = (document.getElementById('headerInput') as HTMLInputElement).value;
+                this.initText = (document.getElementById('textArea') as HTMLInputElement).value;
+            },
 
+            saveChanges() {
+                alert('cock');
+            },
+
+            cancelChanges() {
+                let result: boolean = window.confirm("Вы хотите отменить измененеия?");
+                if(result) {
+                    (document.getElementById('headerInput') as HTMLInputElement).readOnly = true;
+                    (document.getElementById('textArea') as HTMLInputElement).readOnly = true;
+                    (document.getElementById('headerInput') as HTMLInputElement).value = this.initHeader ;
+                    (document.getElementById('textArea') as HTMLInputElement).value = this.initText;
+                    this.editMode = false;
+                }
+
+            }
         }
     })
 </script>
@@ -40,7 +71,7 @@
         width: 100%;
         background-color: dodgerblue;
         display: grid;
-        grid-template-columns: 25% 20% 10% 20% 25%;
+        grid-template-columns: 25% 20% 10% 20% 20% 5%;
     }
 
     #content {
@@ -72,6 +103,11 @@
         grid-row: 1;
     }
 
+    #saveBtn {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
     #deleteBtn {
         grid-column: 4;
         grid-row: 1;
@@ -96,6 +132,11 @@
         font-size: 16pt;
         padding: 10px;
         font-family: 'Roboto' ,'Avenir', Helvetica, Arial, sans-serif;
+    }
+
+    #cancelBtn {
+        grid-column: 5;
+        grid-row: 1;
     }
 
 

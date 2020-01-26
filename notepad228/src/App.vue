@@ -1,10 +1,10 @@
 <template>
     <div id="app">
         <div id="left">
-            <Sidebar :notes="notes"/>
+            <Sidebar :notes="notes" />
         </div>
         <div id="right">
-            <Edit/>
+            <Edit :header=editorHead :text=editorText :id="editorId"/>
         </div>
         <div id="addNoteDim">
             <div id="addNoteDiv">
@@ -28,118 +28,22 @@
             Add
         },
         methods: {
-            cock()
-        }
-        ,
+            noteSelected(id:number) {
+                let note:object = this.notes[id];
+                this.editorText = note.text;
+                this.editorHead = note.header;
+                this.editorId = note.id;
+            }
+        },
+        mounted() {
+            this.notes = JSON.parse(localStorage.items);
+        },
         data() {
             return {
-                notes: [
-                    {
-                        id: 1,
-                        header: 'Enter sandman',
-                        text: 'Prodalis',
-                        dateAdded: '23.01.2020',
-                    },
-                    {
-                        id: 2,
-                        header: 'Sad but true',
-                        text: 'Heeey Im ur life sasok',
-                        dateAdded: '21.01.2020',
-                    },
-                    {
-                        id: 3,
-                        header: 'Holier than thou',
-                        text: 'You are',
-                        dateAdded: '22.01.2020',
-                    },
-                    {
-                        id: 4,
-                        header: 'The unforgiven',
-                        text: 'So I dub thee unforgiven',
-                        dateAdded: '20.01.2020',
-                    },
-                    {
-                        id: 5,
-                        header: 'Anywhere I may roam',
-                        text: 'Nowhere else to fucking roam, nothing else to fucking sing',
-                        dateAdded: '23.01.2020',
-                    }
-                    ,
-                    {
-                        id: 2,
-                        header: 'Sad but true',
-                        text: 'Heeey Im ur life sasok',
-                        dateAdded: '21.01.2020',
-                    },
-                    {
-                        id: 3,
-                        header: 'Holier than thou',
-                        text: 'You are',
-                        dateAdded: '22.01.2020',
-                    },
-                    {
-                        id: 4,
-                        header: 'The unforgiven',
-                        text: 'So I dub thee unforgiven',
-                        dateAdded: '20.01.2020',
-                    },
-                    {
-                        id: 5,
-                        header: 'Anywhere I may roam',
-                        text: 'Nowhere else to fucking roam, nothing else to fucking sing',
-                        dateAdded: '23.01.2020',
-                    },
-                    {
-                        id: 2,
-                        header: 'Sad but true',
-                        text: 'Heeey Im ur life sasok',
-                        dateAdded: '21.01.2020',
-                    },
-                    {
-                        id: 3,
-                        header: 'Holier than thou',
-                        text: 'You are',
-                        dateAdded: '22.01.2020',
-                    },
-                    {
-                        id: 4,
-                        header: 'The unforgiven',
-                        text: 'So I dub thee unforgiven',
-                        dateAdded: '20.01.2020',
-                    },
-                    {
-                        id: 5,
-                        header: 'Anywhere I may roam',
-                        text: 'Nowhere else to fucking roam, nothing else to fucking sing',
-                        dateAdded: '23.01.2020',
-                    }
-                    ,
-                    {
-                        id: 2,
-                        header: 'Sad but true',
-                        text: 'Heeey Im ur life sasok',
-                        dateAdded: '21.01.2020',
-                    },
-                    {
-                        id: 3,
-                        header: 'Holier than thou',
-                        text: 'You are',
-                        dateAdded: '22.01.2020',
-                    },
-                    {
-                        id: 4,
-                        header: 'The unforgiven',
-                        text: 'So I dub thee unforgiven',
-                        dateAdded: '20.01.2020',
-                    },
-                    {
-                        id: 5,
-                        header: 'Anywhere I may roam',
-                        text: 'Nowhere else to fucking roam, nothing else to fucking sing',
-                        dateAdded: '23.01.2020',
-                    }
-
-                ],
+                notes: [],
+                editorHead: '',
+                editorText: '',
+                editorId: 0
             }
         },
     })

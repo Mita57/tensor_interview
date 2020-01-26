@@ -1,12 +1,13 @@
 <template>
     <div id="addNoteGUI">
         <div id="titleAndArea">
-            <input type="text" placeholder="Название" id="addNoteTitle">
-            <textarea name="addNoteTextArea" id="addNoteTextArea" placeholder="Содержание"></textarea>
+            <input type="text" placeholder="Название"  id="addNoteTitle" @input="checkInputs()">
+            <textarea name="addNoteTextArea"  id="addNoteTextArea" placeholder="Содержание"
+                      @input="checkInputs()"></textarea>
         </div>
         <div id="addNoteButtons">
             <button id="addNoteCancel" @click="hideAddOverlay()">Отмена</button>
-            <button id="addNoteAdd">Добавить</button>
+            <button id="addNoteAdd" @click="addNote()" disabled>Добавить</button>
         </div>
     </div>
 </template>
@@ -17,13 +18,36 @@
     export default Vue.extend({
         name: 'Add' as string,
         data() {
-            return {
-
-            }
+            return {}
         },
         methods: {
             hideAddOverlay() {
                 document.getElementById('addNoteDim').style.display = 'None';
+                (document.getElementById('addNoteTitle') as HTMLInputElement).value = '';
+                (document.getElementById('addNoteTextArea') as HTMLInputElement).value = '';
+            },
+
+            addNote() {
+            },
+
+            checkInputs() {
+                let titleFlag: boolean = false;
+                let textFlag: boolean = false;
+                if ((document.getElementById('addNoteTitle') as HTMLInputElement).value) {
+                    titleFlag = true;
+                } else {
+                    titleFlag = false;
+                }
+                if ((document.getElementById('addNoteTextArea') as HTMLInputElement).value) {
+                    textFlag = true;
+                } else {
+                    textFlag = false;
+                }
+                if (titleFlag && textFlag) {
+                    (document.getElementById('addNoteAdd') as HTMLButtonElement).disabled = false;
+                } else {
+                    (document.getElementById('addNoteAdd') as HTMLButtonElement).disabled = true;
+                }
             }
         }
     })
@@ -82,7 +106,21 @@
     #addNoteAdd {
         grid-column: 4;
         grid-row: 2;
+    }
+
+    #addNoteAdd:enabled {
         background-color: dodgerblue;
+        cursor: pointer;
+    }
+
+    #addNoteAdd:disabled {
+        background-color: #adc2e2;
+        color: gray;
+        cursor: default;
+    }
+
+    #addNoteAdd:disabled:hover {
+        background-color: #adc2e2;
     }
 
     button {
@@ -96,12 +134,12 @@
 
     #addNoteAdd:hover {
         background-color: #3da4ff;
-        cursor: pointer;
     }
 
     #addNoteCancel:hover {
         background-color: lightgray;
         cursor: pointer;
     }
+
 
 </style>
