@@ -4,7 +4,7 @@
             <Sidebar :notes="notes"/>
         </div>
         <div id="right">
-            <Edit :header=editorHead :text=editorText :index="editorId"/>
+            <Edit :header=editorHead :text="editorText" :index="editorId"/>
         </div>
         <div id="addNoteDim">
             <div id="addNoteDiv">
@@ -42,29 +42,54 @@
             Add
         },
         methods: {
-            noteSelected(index: number) {
-                let note: Note = this.notes[index];
-                this.editorText = note.text;
-                this.editorHead = note.header;
-                this.editorId = note.id;
-                this.editorIndex = index;
+            noteSelected(id: number, index: number) {
+                if (id == 0) {
+                    this.editorId = 0;
+                } else {
+                    let note: Note = this.notes.find(o => o.id === id);
+                    this.editorText = note.text;
+                    this.editorHead = note.header;
+                    this.editorId = note.id;
+                    this.editorIndex = index;
+                }
             },
 
             saveChanges() {
-                this.notes[this.editorIndex].text = (document.getElementById('textArea') as HTMLInputElement).value;
-                this.notes[this.editorIndex].header = (document.getElementById('headerInput') as HTMLInputElement).value;
+                let index: number = this.notes.findIndex(o => o.id === this.editorId);
+                this.notes[index].text = (document.getElementById('textArea') as HTMLInputElement).value;
+                this.notes[index].header = (document.getElementById('headerInput') as HTMLInputElement).value;
+                this.editorHead = this.notes[index].header;
                 localStorage.items = JSON.stringify(this.notes);
             },
 
             addNote(title: string, text: string) {
-                let id: number = this.notes[this.notes.length - 1].id + 1;
+                let id: number = 1;
+                try {
+                    id = this.notes[this.notes.length - 1].id + 1;
+                } catch {
+                    e
+                }
+                {
+                }
                 let newNote = new Note(id, title, text, new Date());
                 this.notes.push(newNote);
+                localStorage.items = JSON.stringify(this.notes);
+                this.noteSelected(id, this.notes.length - 1);
+            },
+
+            removeNote(id: Number) {
+                let index: number = this.notes.findIndex(o => o.id === id);
+                this.notes.splice(index, 1);
                 localStorage.items = JSON.stringify(this.notes);
             }
         },
         mounted() {
-            this.notes = JSON.parse(localStorage.items);
+            try {
+                this.notes = JSON.parse(localStorage.items);
+            }
+            catch (e) {
+                localStorage.setItem('items', []);
+            }
         },
         data() {
             return {

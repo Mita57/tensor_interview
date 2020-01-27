@@ -10,9 +10,9 @@
             </select>
             <ul id="notes">
                 <li v-for="(note, index) in notes" :id='"entry"+index' @mouseover="showDeleteButton(index)"
-                    @mouseleave="hideDeleteButton(index)" @click="openInEditor(index)">
+                    @mouseleave="hideDeleteButton(index)" @click="openInEditor(note.id, index)">
                     <h3>{{note.header}}</h3>
-                    <img src="../assets/remove.png" :id='"deleteIcon"+index' @click="removeNote(index)">
+                    <img src="../assets/remove.png" :id='"deleteIcon"+index' @click="removeNote(note.id, note.header)">
                     <p>{{note.text}}</p>
                 </li>
             </ul>
@@ -22,9 +22,13 @@
 
 <script lang="ts">
     import Vue from 'vue'
+
     export default Vue.extend({
         name: 'Sidebar' as string,
         data() {
+            return {
+                deleteCancelOpen: false,
+            }
         },
         props: {
             notes: Array,
@@ -45,13 +49,23 @@
                 document.getElementById(elementId).style.display = 'none';
             },
 
-
-            removeNote(id: number): void {
-                this.$parent.removeNote(id);
+            removeNote(id: number, text:string): void {
+                let flag: boolean = confirm('Вы хотите удалить запись ' + text + '?');
+                if (flag) {
+                    this.$parent.removeNote(id);
+                }
+                else {
+                    this.deleteCancelOpen = true;
+                }
             },
 
-            openInEditor(index: number): void {
-                this.$parent.noteSelected(index);
+            openInEditor(id: number, index: number): void {
+                if(!this.deleteCancelOpen) {
+                    this.$parent.noteSelected(id, index);
+                }
+                else {
+                    this.deleteCancelOpen = false;
+                }
             }
         }
     })
