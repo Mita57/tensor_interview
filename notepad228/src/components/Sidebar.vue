@@ -50,8 +50,8 @@
                 this.$parent.removeNote(id);
             },
 
-            openInEditor(id: number): void {
-                this.$parent.noteSelected(id);
+            openInEditor(index: number): void {
+                this.$parent.noteSelected(index);
             }
         }
     })

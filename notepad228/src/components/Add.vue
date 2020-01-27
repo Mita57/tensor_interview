@@ -1,8 +1,8 @@
 <template>
     <div id="addNoteGUI">
         <div id="titleAndArea">
-            <input type="text" placeholder="Название"  id="addNoteTitle" @input="checkInputs()">
-            <textarea name="addNoteTextArea"  id="addNoteTextArea" placeholder="Содержание"
+            <input type="text" placeholder="Название" id="addNoteTitle" @input="checkInputs()">
+            <textarea name="addNoteTextArea" id="addNoteTextArea" placeholder="Содержание"
                       @input="checkInputs()"></textarea>
         </div>
         <div id="addNoteButtons">
@@ -28,6 +28,10 @@
             },
 
             addNote() {
+                let title: string = (document.getElementById('addNoteTitle') as HTMLInputElement).value;
+                let text: string = (document.getElementById('addNoteTextArea') as HTMLInputElement).value;
+                this.$parent.addNote(title, text);
+                this.hideAddOverlay();
             },
 
             checkInputs() {

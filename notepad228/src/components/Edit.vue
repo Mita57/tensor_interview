@@ -2,13 +2,13 @@
     <div id="edit">
         <div id="buttons">
             <button id="saveBtn" v-if="editMode" @click="saveChanges()">Сохранить</button>
-            <button id="editBtn" v-else @click="enableChagnes()">Редактировать</button>
-            <button id="deleteBtn">Удалить</button>
+            <button id="editBtn"  @click="enableChagnes()" v-if="index!=0 && !editMode">Редактировать</button>
+            <button id="deleteBtn" v-if="index!=0">Удалить</button>
             <button id="cancelBtn" v-if="editMode" @click="cancelChanges()">Отмена</button>
         </div>
         <div id="content">
-            <input id="headerInput" type="text" readonly :value=header>
-            <textarea id="textArea" readonly> {{text}} </textarea>
+            <input id="headerInput" v-if="index!=0" type="text" readonly :value=header>
+            <textarea id="textArea" v-if="index!=0" readonly> {{text}} </textarea>
         </div>
     </div>
 </template>
@@ -29,7 +29,7 @@
             noteId: Number,
             header: String,
             text: String,
-            id: Number
+            index: Number,
         },
         methods: {
             enableChagnes() {
@@ -41,7 +41,10 @@
             },
 
             saveChanges() {
-                alert('cock');
+                this.$parent.saveChanges();
+                this.initHeader = (document.getElementById('headerInput') as HTMLInputElement).value;
+                this.initText = (document.getElementById('textArea') as HTMLInputElement).value;
+                this.editMode = false;
             },
 
             cancelChanges() {
@@ -130,7 +133,7 @@
         border: 0;
         box-shadow: 0px 0px 8px 2px darkgrey;
         font-size: 16pt;
-        padding: 10px;
+        padding: 10px 10px 10px 0px;
         font-family: 'Roboto' ,'Avenir', Helvetica, Arial, sans-serif;
     }
 

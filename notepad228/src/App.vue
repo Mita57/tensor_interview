@@ -1,10 +1,10 @@
 <template>
     <div id="app">
         <div id="left">
-            <Sidebar :notes="notes" />
+            <Sidebar :notes="notes"/>
         </div>
         <div id="right">
-            <Edit :header=editorHead :text=editorText :id="editorId"/>
+            <Edit :header=editorHead :text=editorText :index="editorId"/>
         </div>
         <div id="addNoteDim">
             <div id="addNoteDiv">
@@ -20,6 +20,20 @@
     import Edit from "@/components/Edit.vue";
     import Add from "@/components/Add.vue"
 
+    class Note {
+        id: number;
+        header: string;
+        text: string;
+        dateAdded: Date;
+
+        constructor(id: number, header: string, text: string, dateAdded: Date) {
+            this.id = id;
+            this.header = header;
+            this.text = text;
+            this.dateAdded = dateAdded;
+        }
+    }
+
     export default Vue.extend({
         name: 'App' as string,
         components: {
@@ -28,11 +42,25 @@
             Add
         },
         methods: {
-            noteSelected(id:number) {
-                let note:object = this.notes[id];
+            noteSelected(index: number) {
+                let note: Note = this.notes[index];
                 this.editorText = note.text;
                 this.editorHead = note.header;
                 this.editorId = note.id;
+                this.editorIndex = index;
+            },
+
+            saveChanges() {
+                this.notes[this.editorIndex].text = (document.getElementById('textArea') as HTMLInputElement).value;
+                this.notes[this.editorIndex].header = (document.getElementById('headerInput') as HTMLInputElement).value;
+                localStorage.items = JSON.stringify(this.notes);
+            },
+
+            addNote(title: string, text: string) {
+                let id: number = this.notes[this.notes.length - 1].id + 1;
+                let newNote = new Note(id, title, text, new Date());
+                this.notes.push(newNote);
+                localStorage.items = JSON.stringify(this.notes);
             }
         },
         mounted() {
@@ -43,7 +71,8 @@
                 notes: [],
                 editorHead: '',
                 editorText: '',
-                editorId: 0
+                editorId: 0,
+                editorIndex: -1
             }
         },
     })
