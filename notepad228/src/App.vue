@@ -67,11 +67,8 @@
                 try {
                     id = this.notes[this.notes.length - 1].id + 1;
                 } catch {
-                    e
                 }
-                {
-                }
-                let newNote = new Note(id, title, text, new Date());
+                let newNote:Note = new Note(id, title, text, new Date());
                 this.notes.push(newNote);
                 localStorage.items = JSON.stringify(this.notes);
                 this.noteSelected(id, this.notes.length - 1);
@@ -81,6 +78,9 @@
                 let index: number = this.notes.findIndex(o => o.id === id);
                 this.notes.splice(index, 1);
                 localStorage.items = JSON.stringify(this.notes);
+                if(id == this.editorId) {
+                    this.editorId = 0;
+                }
             }
         },
         mounted() {
@@ -97,7 +97,7 @@
                 editorHead: '',
                 editorText: '',
                 editorId: 0,
-                editorIndex: -1
+                editorIndex: -1,
             }
         },
     })

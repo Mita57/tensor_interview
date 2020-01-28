@@ -1,7 +1,7 @@
 <template>
     <div id="sidebar">
         <button id="addNote" @click="showOverlay"> + Заметка</button>
-        <input type="text" id="search" placeholder="Поиск">
+        <input type="text" id="search" placeholder="Поиск" @input="searchChanged()">
         <div id="sort">
             Сортировать по:
             <select name="sortBy">
@@ -28,12 +28,17 @@
         data() {
             return {
                 deleteCancelOpen: false,
+                notesToDisplay: [],
             }
         },
         props: {
             notes: Array,
         }
         ,
+        mounted() {
+            this.notesToDisplay = this.notes;
+        },
+
         methods: {
             showOverlay() {
                 document.getElementById('addNoteDim').style.display = 'block';
@@ -66,7 +71,13 @@
                 else {
                     this.deleteCancelOpen = false;
                 }
-            }
+            },
+
+            searchChanged() {
+
+            },
+
+
         }
     })
 </script>
