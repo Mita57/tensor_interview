@@ -64,9 +64,8 @@
             removeElement() {
                 let flag: boolean = confirm('Удалить запись?');
                 if (flag) {
-                    this.$parent.removeNote(this.noteId);
-                    this.index = 0;
                     this.$parent.noteSelected(0, 0);
+                    this.$parent.removeNote(this.noteId);
                 }
             }
         }

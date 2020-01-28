@@ -72,17 +72,18 @@
                 let newNote: Note = new Note(id, title, text, new Date());
                 this.notes.push(newNote);
                 localStorage.items = JSON.stringify(this.notes);
+                this.searchChanged(new RegExp((document.getElementById('search') as HTMLInputElement).value, 'i'));
                 this.noteSelected(id, this.notes.length - 1);
             },
 
             removeNote(id: Number): void {
                 let index: number = this.notes.findIndex(o => o.id === id);
-                this.notes.splice(index, 1);
-                localStorage.items = JSON.stringify(this.notes);
                 if (id == this.editorId) {
                     this.editorId = 0;
                 }
-                this.searchChanged();
+                this.notes.splice(index, 1);
+                localStorage.items = JSON.stringify(this.notes);
+                this.searchChanged(new RegExp((document.getElementById('search') as HTMLInputElement).value, 'i'));
             },
 
             searchChanged(searchQuery: RegExp): void {
