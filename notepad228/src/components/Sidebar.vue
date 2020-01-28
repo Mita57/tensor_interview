@@ -4,9 +4,10 @@
         <input type="text" id="search" placeholder="Поиск" @input="searchChanged()">
         <div id="sort">
             Сортировать по:
-            <select name="sortBy">
+            <select name="sortBy" @change="sortChanged()" id="sortPicker">
                 <option value="asc">По возрастанию даты</option>
-                <option value="desv">По убыванию даты</option>
+                <option value="desc">По убыванию даты</option>
+                <option value="name">По имени</option>
             </select>
             <ul id="notes">
                 <li v-for="(note, index) in notes" :id='"entry"+index' @mouseover="showDeleteButton(index)"
@@ -25,20 +26,14 @@
 
     export default Vue.extend({
         name: 'Sidebar' as string,
+            props: {
+                notes: Array,
+            },
         data() {
             return {
                 deleteCancelOpen: false,
-                notesToDisplay: [],
             }
         },
-        props: {
-            notes: Array,
-        }
-        ,
-        mounted() {
-            this.notesToDisplay = this.notes;
-        },
-
         methods: {
             showOverlay() {
                 document.getElementById('addNoteDim').style.display = 'block';
@@ -74,9 +69,13 @@
             },
 
             searchChanged() {
-
+                let searchQuery: RegExp = new RegExp((document.getElementById('search') as HTMLInputElement).value, 'i');
+                this.$parent.searchChanged(searchQuery);
             },
 
+            sortChanged() {
+                this.$parent.sortChanged((document.getElementById('sortPicker') as HTMLSelectElement).value);
+            }
 
         }
     })

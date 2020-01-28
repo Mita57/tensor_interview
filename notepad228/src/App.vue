@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <div id="left">
-            <Sidebar :notes="notes"/>
+            <Sidebar :notes="notesToRender"/>
         </div>
         <div id="right">
             <Edit :header=editorHead :text="editorText" :index="editorId"/>
@@ -19,6 +19,7 @@
     import Sidebar from './components/Sidebar.vue';
     import Edit from "@/components/Edit.vue";
     import Add from "@/components/Add.vue"
+    import {inBrowser} from "vue-router/src/util/dom";
 
     class Note {
         id: number;
@@ -42,7 +43,7 @@
             Add
         },
         methods: {
-            noteSelected(id: number, index: number) {
+            noteSelected(id: number, index: number): void {
                 if (id == 0) {
                     this.editorId = 0;
                 } else {
@@ -54,7 +55,7 @@
                 }
             },
 
-            saveChanges() {
+            saveChanges(): void {
                 let index: number = this.notes.findIndex(o => o.id === this.editorId);
                 this.notes[index].text = (document.getElementById('textArea') as HTMLInputElement).value;
                 this.notes[index].header = (document.getElementById('headerInput') as HTMLInputElement).value;
@@ -62,34 +63,81 @@
                 localStorage.items = JSON.stringify(this.notes);
             },
 
-            addNote(title: string, text: string) {
+            addNote(title: string, text: string): void {
                 let id: number = 1;
                 try {
                     id = this.notes[this.notes.length - 1].id + 1;
                 } catch {
                 }
-                let newNote:Note = new Note(id, title, text, new Date());
+                let newNote: Note = new Note(id, title, text, new Date());
                 this.notes.push(newNote);
                 localStorage.items = JSON.stringify(this.notes);
                 this.noteSelected(id, this.notes.length - 1);
             },
 
-            removeNote(id: Number) {
+            removeNote(id: Number): void {
                 let index: number = this.notes.findIndex(o => o.id === id);
                 this.notes.splice(index, 1);
                 localStorage.items = JSON.stringify(this.notes);
-                if(id == this.editorId) {
+                if (id == this.editorId) {
                     this.editorId = 0;
                 }
+                this.searchChanged();
+            },
+
+            searchChanged(searchQuery: RegExp): void {
+                let newNotesToRender = [];
+                for (let i = 0; i < this.notes.length; i++) {
+                    if (searchQuery.test(this.notes[i].header)) {
+                        newNotesToRender.push(this.notes[i]);
+                    }
+                }
+                this.notesToRender = newNotesToRender;
+            },
+
+            sortChanged(type: string): void {
+                switch (type) {
+                    case 'asc': {
+                        this.notesToRender.sort(function (a, b) {
+                            let keyA = new Date(a.dateAdded),
+                                keyB = new Date(b.dateAdded);
+                            if (keyA < keyB) return -1;
+                            if (keyA > keyB) return 1;
+                            return 0;
+                        });
+                        break;
+                    }
+                    case 'desc': {
+                        this.notesToRender.sort(function (a, b) {
+                            let keyA = new Date(a.dateAdded),
+                                keyB = new Date(b.dateAdded);
+                            if (keyA < keyB) return 1;
+                            if (keyA > keyB) return -1;
+                            return 0;
+                        });
+                        break;
+                    }
+                    case 'name': {
+                        this.notesToRender.sort(function (a, b) {
+                            let keyA = a.header.toLowerCase(),
+                                keyB = b.header.toLowerCase();
+                            if (keyA < keyB) return -1;
+                            if (keyA > keyB) return 1;
+                            return 0;
+                        });
+                        break;
+                    }
+                }
             }
+
         },
         mounted() {
             try {
                 this.notes = JSON.parse(localStorage.items);
+            } catch (e) {
+                localStorage.setItem('items', '');
             }
-            catch (e) {
-                localStorage.setItem('items', []);
-            }
+            this.notesToRender = this.notes;
         },
         data() {
             return {
@@ -98,6 +146,7 @@
                 editorText: '',
                 editorId: 0,
                 editorIndex: -1,
+                notesToRender: [],
             }
         },
     })
