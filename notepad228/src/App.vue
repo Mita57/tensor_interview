@@ -19,13 +19,12 @@
     import Sidebar from './components/Sidebar.vue';
     import Edit from "@/components/Edit.vue";
     import Add from "@/components/Add.vue"
-    import {inBrowser} from "vue-router/src/util/dom";
 
-    class Note {
-        id: number;
-        header: string;
-        text: string;
-        dateAdded: Date;
+    class Note{
+        public id: number;
+        public header: string;
+        public text: string;
+        public dateAdded: Date;
 
         constructor(id: number, header: string, text: string, dateAdded: Date) {
             this.id = id;
@@ -33,6 +32,7 @@
             this.text = text;
             this.dateAdded = dateAdded;
         }
+
     }
 
     export default Vue.extend({
@@ -47,7 +47,7 @@
                 if (id == 0) {
                     this.editorId = 0;
                 } else {
-                    let note: Note = this.notes.find(o => o.id === id);
+                    let note: Note = (this.notes.find(o => o.id === id));
                     this.editorText = note.text;
                     this.editorHead = note.header;
                     this.editorId = note.id;
@@ -99,7 +99,7 @@
             sortChanged(type: string): void {
                 switch (type) {
                     case 'asc': {
-                        this.notesToRender.sort(function (a, b) {
+                        this.notesToRender.sort(function (a:Note, b:Note):number {
                             let keyA = new Date(a.dateAdded),
                                 keyB = new Date(b.dateAdded);
                             if (keyA < keyB) return -1;
@@ -109,7 +109,7 @@
                         break;
                     }
                     case 'desc': {
-                        this.notesToRender.sort(function (a, b) {
+                        this.notesToRender.sort(function (a:Note, b:Note):number {
                             let keyA = new Date(a.dateAdded),
                                 keyB = new Date(b.dateAdded);
                             if (keyA < keyB) return 1;
@@ -119,7 +119,7 @@
                         break;
                     }
                     case 'name': {
-                        this.notesToRender.sort(function (a, b) {
+                        this.notesToRender.sort(function (a:Note, b:Note):number {
                             let keyA = a.header.toLowerCase(),
                                 keyB = b.header.toLowerCase();
                             if (keyA < keyB) return -1;
@@ -142,12 +142,12 @@
         },
         data() {
             return {
-                notes: [],
+                notes: [Note],
                 editorHead: '',
                 editorText: '',
                 editorId: 0,
                 editorIndex: -1,
-                notesToRender: [],
+                notesToRender: [Note],
             }
         },
     })
