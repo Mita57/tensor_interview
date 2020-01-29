@@ -54,8 +54,8 @@
                 if (result) {
                     (document.getElementById('headerInput') as HTMLInputElement).readOnly = true;
                     (document.getElementById('textArea') as HTMLInputElement).readOnly = true;
-                    (document.getElementById('headerInput') as HTMLInputElement).value = this.initHeader;
-                    (document.getElementById('textArea') as HTMLInputElement).value = this.initText;
+                    this.header = this.initHeader;
+                    this.text = this.initText;
                     this.editMode = false;
                 }
             },
