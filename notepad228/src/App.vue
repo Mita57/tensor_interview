@@ -1,10 +1,10 @@
 <template>
     <div id="app">
         <div id="left">
-            <Sidebar :notes="notesToRender"/>
+            <Sidebar :notes="notesToRender" />
         </div>
         <div id="right">
-            <Edit :header=editorHead :text="editorText" :index="editorId"/>
+            <Edit :header=editorHead :text="editorText" :id="editorId"/>
         </div>
         <div id="addNoteDim">
             <div id="addNoteDiv">
@@ -20,7 +20,7 @@
     import Edit from "@/components/Edit.vue";
     import Add from "@/components/Add.vue"
 
-    class Note{
+    class Note {
         public id: number;
         public header: string;
         public text: string;
@@ -47,7 +47,7 @@
                 if (id == 0) {
                     this.editorId = 0;
                 } else {
-                    let note: Note = (this.notes.find(o => o.id === id));
+                    let note: Note = (this.notesToRender.find(o => o.id === id));
                     this.editorText = note.text;
                     this.editorHead = note.header;
                     this.editorId = note.id;
@@ -59,7 +59,6 @@
                 let index: number = this.notes.findIndex(o => o.id === this.editorId);
                 this.notes[index].text = (document.getElementById('textArea') as HTMLInputElement).value;
                 this.notes[index].header = (document.getElementById('headerInput') as HTMLInputElement).value;
-                this.editorHead = this.notes[index].header;
                 localStorage.items = JSON.stringify(this.notes);
             },
 
@@ -73,13 +72,12 @@
                 this.notes.push(newNote);
                 localStorage.items = JSON.stringify(this.notes);
                 this.searchChanged(new RegExp((document.getElementById('search') as HTMLInputElement).value, 'i'));
-                this.noteSelected(id, this.notes.length - 1);
             },
 
             removeNote(id: Number): void {
                 let index: number = this.notes.findIndex(o => o.id === id);
                 if (id == this.editorId) {
-                    this.editorId = 0;
+                    this.noteSelected(0, 0);
                 }
                 this.notes.splice(index, 1);
                 localStorage.items = JSON.stringify(this.notes);
@@ -99,7 +97,7 @@
             sortChanged(type: string): void {
                 switch (type) {
                     case 'asc': {
-                        this.notesToRender.sort(function (a:Note, b:Note):number {
+                        this.notesToRender.sort(function (a: Note, b: Note): number {
                             let keyA = new Date(a.dateAdded),
                                 keyB = new Date(b.dateAdded);
                             if (keyA < keyB) return -1;
@@ -109,7 +107,7 @@
                         break;
                     }
                     case 'desc': {
-                        this.notesToRender.sort(function (a:Note, b:Note):number {
+                        this.notesToRender.sort(function (a: Note, b: Note): number {
                             let keyA = new Date(a.dateAdded),
                                 keyB = new Date(b.dateAdded);
                             if (keyA < keyB) return 1;
@@ -119,11 +117,21 @@
                         break;
                     }
                     case 'name': {
-                        this.notesToRender.sort(function (a:Note, b:Note):number {
+                        this.notesToRender.sort(function (a: Note, b: Note): number {
                             let keyA = a.header.toLowerCase(),
                                 keyB = b.header.toLowerCase();
                             if (keyA < keyB) return -1;
                             if (keyA > keyB) return 1;
+                            return 0;
+                        });
+                        break;
+                    }
+                    case 'nameDesc': {
+                        this.notesToRender.sort(function (a: Note, b: Note): number {
+                            let keyA = a.header.toLowerCase(),
+                                keyB = b.header.toLowerCase();
+                            if (keyA < keyB) return 1;
+                            if (keyA > keyB) return -1;
                             return 0;
                         });
                         break;

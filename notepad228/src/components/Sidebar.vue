@@ -3,17 +3,19 @@
         <button id="addNote" @click="showOverlay"> + Заметка</button>
         <input type="text" id="search" placeholder="Поиск" @input="searchChanged()">
         <div id="sort">
-            Сортировать по:
+            Сортировка:
             <select name="sortBy" @change="sortChanged()" id="sortPicker">
                 <option value="asc">По возрастанию даты</option>
                 <option value="desc">По убыванию даты</option>
-                <option value="name">По имени</option>
+                <option value="name">По возрастанию заголовка</option>
+                <option value="nameDesc">По убыванию заголовка</option>
             </select>
             <ul id="notes">
                 <li v-for="(note, index) in notes" :id='"entry"+index' @mouseover="showDeleteButton(index)"
                     @mouseleave="hideDeleteButton(index)" @click="openInEditor(note.id, index)">
                     <h3>{{note.header}}</h3>
-                    <img src="../assets/remove.png" :id='"deleteIcon"+index' @click="removeNote(note.id, note.header)">
+                    <img src="../assets/remove.png" :id='"deleteIcon"+index'
+                         @click="removeNote(note.id, note.header, index)">
                     <p>{{note.text}}</p>
                 </li>
             </ul>
@@ -26,12 +28,14 @@
 
     export default Vue.extend({
         name: 'Sidebar' as string,
-            props: {
-                notes: Array,
-            },
+        props: {
+            notes: Array,
+        },
         data() {
             return {
                 deleteCancelOpen: false,
+                prevEdited: 0,
+                prevStyle: '',
             }
         },
         methods: {
@@ -49,21 +53,30 @@
                 document.getElementById(elementId).style.display = 'none';
             },
 
-            removeNote(id: number, text:string): void {
+            removeNote(id: number, text: string, index: number): void {
                 let flag: boolean = confirm('Вы хотите удалить запись ' + text + '?');
                 if (flag) {
                     this.$parent.removeNote(id);
-                }
-                else {
                     this.deleteCancelOpen = true;
+                    if (index == this.prevEdited) {
+                        document.getElementById('entry' + index).style.backgroundColor = this.prevStyle;
+                    }
+                } else {
                 }
             },
 
             openInEditor(id: number, index: number): void {
-                if(!this.deleteCancelOpen) {
+
+                if (!this.deleteCancelOpen) {
                     this.$parent.noteSelected(id, index);
-                }
-                else {
+                    if (this.prevStyle == '') {
+                        document.getElementById('entry' + index).style.backgroundColor
+                    }
+                    document.getElementById('entry' + this.prevEdited).style.backgroundColor = this.prevStyle;
+                    document.getElementById('entry' + index).style.backgroundColor = '#fff6cc';
+                    this.prevEdited = index;
+
+                } else {
                     this.deleteCancelOpen = false;
                 }
             },

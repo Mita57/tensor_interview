@@ -32,6 +32,7 @@
                 let text: string = (document.getElementById('addNoteTextArea') as HTMLInputElement).value;
                 this.$parent.addNote(title, text);
                 this.hideAddOverlay();
+
             },
 
             checkInputs() {

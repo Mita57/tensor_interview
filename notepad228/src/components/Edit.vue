@@ -2,13 +2,13 @@
     <div id="edit">
         <div id="buttons">
             <button id="saveBtn" v-if="editMode" @click="saveChanges()">Сохранить</button>
-            <button id="editBtn" @click="enableChagnes()" v-if="index!=0 && !editMode">Редактировать</button>
-            <button id="deleteBtn" v-if="index!=0" @click="removeElement()">Удалить</button>
+            <button id="editBtn" @click="enableChagnes()" v-if="id!=0 && !editMode">Редактировать</button>
+            <button id="deleteBtn" v-if="id!=0" @click="removeElement()">Удалить</button>
             <button id="cancelBtn" v-if="editMode" @click="cancelChanges()">Отмена</button>
         </div>
         <div id="content">
-            <input id="headerInput" v-if="index!=0" type="text" readonly :value=header>
-            <textarea id="textArea" v-if="index!=0" readonly> {{text}} </textarea>
+            <input id="headerInput" v-if="id!=0" type="text" readonly v-model="header">
+            <textarea id="textArea" v-if="id!=0" readonly v-model="text"></textarea>
             <div v-else id="nothingSelected">Выберите запись в меню слева или создайте новую запись</div>
         </div>
     </div>
@@ -27,10 +27,9 @@
             }
         },
         props: {
-            noteId: Number,
             header: String,
             text: String,
-            index: Number,
+            id: Number,
         },
         methods: {
             enableChagnes() {
@@ -64,8 +63,8 @@
             removeElement() {
                 let flag: boolean = confirm('Удалить запись?');
                 if (flag) {
+                    this.$parent.removeNote(this.id);
                     this.$parent.noteSelected(0, 0);
-                    this.$parent.removeNote(this.noteId);
                 }
             }
         }
@@ -149,7 +148,7 @@
         border: 0;
         box-shadow: 0px 0px 8px 2px darkgrey;
         font-size: 16pt;
-        padding: 10px 10px 10px 0px;
+        padding: 10px;
         font-family: 'Roboto', 'Avenir', Helvetica, Arial, sans-serif;
     }
 

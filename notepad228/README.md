@@ -1,29 +1,9 @@
 # notepad228
 
 ## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+The notepad228 project is already built for the production, opening index.html in the dist folder should do the work <br>
+##Development setup
+To launch the project in development mode:
+1. Go to notepad228 and execute $npm install;
+2. Execute npm run serve; <br>
+Now the project is running on Node.JS server and will react to any changes made with automatic rebuild.
